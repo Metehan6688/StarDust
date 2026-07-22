@@ -49,7 +49,7 @@ Quick summary — see [`CHANGELOG.en.md`](./CHANGELOG.en.md) for the full list:
 
 - The single-file `StarDust.h/.cpp` layout was split into modular headers under `starDustNS` (`config`, `packet`, `security`, `parser`, `sender`, `port`, `commandset`).
 - Flat single-byte addressing (`source`/`target`) was replaced with two-level hierarchical addressing via `address_t` (squad + unit).
-- Per-message-type structs and dedicated `send*/receive*` functions (REQUEST, TELEMETRY, COMMAND, BETRAYAL, etc.) were removed in favor of a single **generic payload + `functionCode` (uint16_t)** model.
+- Per-message-type structs and dedicated `send*/receive*` functions (REQUEST, TELEMETRY, COMMAND, etc.) were removed in favor of a single **generic payload + `functionCode` (uint16_t)** model.
 - Payload size dropped from 64 bytes to **16 bytes** (optimized for smaller, more frequent packets).
 - A **6-byte fixed signature field** was added to every packet (didn't exist in v3).
 - The CRC algorithm changed from **CRC16-CCITT (poly 0x1021)** to a **CRC16/Modbus-style algorithm (poly 0xA001)**.
@@ -129,7 +129,7 @@ At every state transition, if the gap between two bytes exceeds `config::TIMEOUT
 1. Clone this repo into `Arduino/libraries/StarDust`, **or**, in PlatformIO:
    ```ini
    lib_deps =
-       https://github.com/<your-username>/StarDust.git
+       https://github.com/Metehan6688/StarDust.git
    ```
 2. In `config.hpp`, uncomment `USE_ARDUINO_FRAMEWORK` and comment out `USE_LINUX_FRAMEWORK`.
 3. Include it in your project with `#include "starDust.hpp"`.
