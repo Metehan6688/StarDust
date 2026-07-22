@@ -129,7 +129,7 @@ Her state geçişinde, iki byte arası süre `config::TIMEOUT_MS`'i aşarsa pars
 1. Bu repoyu `Arduino/libraries/StarDust` altına klonlayın **veya** PlatformIO'da:
    ```ini
    lib_deps =
-       https://github.com/<kullanici-adi>/StarDust.git
+       https://github.com/Metehan6688/StarDust.git
    ```
 2. `config.hpp` içinde `USE_ARDUINO_FRAMEWORK` satırının başındaki yorumu kaldırın, `USE_LINUX_FRAMEWORK`'ü yorum satırı yapın.
 3. `#include "starDust.hpp"` ile projenize dahil edin.
