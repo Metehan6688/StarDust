@@ -49,7 +49,7 @@ Kısa özet — detaylı liste için [`CHANGELOG.md`](./CHANGELOG.md):
 
 - Tek dosyalık `StarDust.h/.cpp` yapısı, `starDustNS` altında modüler header'lara bölündü (`config`, `packet`, `security`, `parser`, `sender`, `port`, `commandset`).
 - Tek byte'lık düz adresleme (`source`/`target`) yerine **squad + unit** ile iki katmanlı hiyerarşik adresleme (`address_t`) geldi.
-- Her mesaj tipi için ayrı struct + ayrı `send*/receive*` fonksiyonu (REQUEST, TELEMETRY, COMMAND, BETRAYAL, vs.) kaldırıldı; yerine tek tip **generic payload + `functionCode` (uint16_t)** modeli geldi.
+- Her mesaj tipi için ayrı struct + ayrı `send*/receive*` fonksiyonu (REQUEST, TELEMETRY, COMMAND, vs.) kaldırıldı; yerine tek tip **generic payload + `functionCode` (uint16_t)** modeli geldi.
 - Payload boyutu 64 byte'tan **16 byte'a** düştü (daha küçük, daha sık paket senaryosuna göre optimize edilmiş).
 - Paket başına **6 byte'lık sabit imza alanı** eklendi (v3'te yoktu).
 - CRC algoritması **CRC16-CCITT (poly 0x1021)**'den **CRC16/Modbus tarzı (poly 0xA001)**'a değişti.
