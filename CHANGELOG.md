@@ -1,15 +1,34 @@
-# CHANGELOG
+# Changelog
 
-## Versions:
-- StarDust v0    [Unreleased]
-- StarDust v1
-- StarDust v2
-- StarDust Alpha [Unreleased]
-- StarDust Base  [Unreleased]
-- StarDust v3    [Unreleased]
-- StarDust v4
-- StarDust v4.1  [Unreleased]
-- StarDust v5 [in-proccess]
+All notable changes to this project are documented here.
 
-## Note:
-StarDust v4 was written from scrath; parsing, crc, vs. fully changed
+## [Unreleased]
+### v5 (in-process)
+- ...
+
+## [4.1] - 2026-07-25
+### Fixed
+- ...
+### Changed
+- ...
+### Added
+- ...
+### Removed
+- ...
+
+## [4.0]
+> Rewritten from scratch; parsing, CRC, etc. fully changed.
+- ...
+
+## [3.0]
+- ...
+
+## [2.0]
+- ...
+
+## [1.0]
+- ...
+
+## [0.x] / Alpha / Base
+> Prototype/internal versions, never released.
+- ...
