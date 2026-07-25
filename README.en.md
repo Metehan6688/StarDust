@@ -284,7 +284,7 @@ The most time-consuming part of migrating a v3-based project will likely be defi
 - [ ] No broadcast addressing.
 - [ ] No fragmentation/reassembly mechanism for data larger than 16 bytes.
 - [ ] No unit tests or `examples/` folder yet.
-- [ ] No `CMakeLists.txt` / `platformio.ini` templates yet (happy to prepare these too if wanted).
+- [ ] No `CMakeLists.txt` / `platformio.ini` templates yet.
 
 ---
 
