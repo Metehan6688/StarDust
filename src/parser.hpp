@@ -13,9 +13,7 @@ namespace starDustNS::parser {
         IDLE,
         READING_HEADER,
         READING_BODY,
-        READING_CRC,
-        YIELD,
-        ERROR
+        READING_CRC
     };
 
     enum class parseResult {
@@ -24,12 +22,18 @@ namespace starDustNS::parser {
         READING,
         CRC_ERROR,
         SIGNATURE_ERROR,
-        INVALID_ID,
-        INVALID_PAYLOAD,
         INVALID_FRAME,
         TIMEOUT,
         UNDEFINED_ERROR
     };
+
+    inline constexpr bool isError(parseResult r) {
+        return r == parseResult::CRC_ERROR
+            || r == parseResult::SIGNATURE_ERROR
+            || r == parseResult::INVALID_FRAME
+            || r == parseResult::TIMEOUT
+            || r == parseResult::UNDEFINED_ERROR;
+    }
 
     struct parserCTX_t {
         parserState state = parserState::IDLE;
@@ -60,6 +64,16 @@ namespace starDustNS::parser {
 
         if (ctx.state != parserState::IDLE && (millis - ctx.lastReadTS) > config::TIMEOUT_MS) {
             detail::resetParser(ctx);
+            ctx.lastReadTS = millis;
+            outByte = exportPack_t{};
+            outByte.resultLog = parseResult::TIMEOUT;
+
+            if (inComingByte == config::FIRST_BYTE) {
+                ctx.rxBuffer[0] = inComingByte;
+                ctx.bytesRead = 1;
+                ctx.state = parserState::READING_HEADER;
+            }
+            return parseResult::TIMEOUT;
         }
         ctx.lastReadTS = millis;
 
@@ -96,8 +110,7 @@ namespace starDustNS::parser {
                     return parseResult::READING;
                 }
 
-                packet::packet_t received{};
-                memcpy(&received, ctx.rxBuffer, sizeof(packet::packet_t));
+                auto& received = *reinterpret_cast<packet::packet_t*>(ctx.rxBuffer);
 
                 uint16_t computedCRC = calculateCRC16(ctx.rxBuffer, sizeof(packet::packet_t) - sizeof(received.crc16));
 
@@ -115,7 +128,11 @@ namespace starDustNS::parser {
                     result = parseResult::OK;
                 }
 
-                if (result != parseResult::OK) {
+                if (result == parseResult::CRC_ERROR || result == parseResult::SIGNATURE_ERROR) {
+                    outByte = exportPack_t{};
+                    outByte.sender   = received.header.sender;
+                    outByte.receiver = received.header.receiver;
+                } else if (result != parseResult::OK) {
                     outByte = exportPack_t{};
                 }
                 outByte.resultLog = result;
