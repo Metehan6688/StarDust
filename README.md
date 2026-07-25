@@ -284,7 +284,7 @@ Mevcut v3 tabanlı bir projeyi taşırken en çok zaman alacak kısım, tipe öz
 - [ ] Broadcast adresleme yok.
 - [ ] 16 byte'ı aşan veriler için fragmentation/reassembly mekanizması yok.
 - [ ] Birim testleri ve `examples/` klasörü henüz repoya eklenmedi.
-- [ ] `CMakeLists.txt` / `platformio.ini` şablonları henüz yok (istersen bunları da hazırlayabilirim).
+- [ ] `CMakeLists.txt` / `platformio.ini` şablonları henüz yok.
 
 ---
 
