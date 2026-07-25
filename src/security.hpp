@@ -1,17 +1,31 @@
 #pragma once
 
 #include <stdint.h>
+#include <array>
 #include "config.hpp"
 
+
 namespace starDustNS::security{
+    namespace detail {
+        inline constexpr std::array<uint16_t, 256> makeCRC16Table() {
+            std::array<uint16_t, 256> table{};
+            for (uint32_t i = 0; i < 256; ++i) {
+                uint16_t crc = static_cast<uint16_t>(i);
+                for (int bit = 0; bit < 8; ++bit) {
+                    crc = (crc & 1) ? (crc >> 1) ^ config::CRC16_POLY : (crc >> 1);
+                }
+                table[i] = crc;
+            }
+            return table;
+        }
+
+        inline constexpr auto CRC16_TABLE = makeCRC16Table();
+    }
+
     inline uint16_t calculateCRC16(const uint8_t* data, size_t len){
         uint16_t CRC = config::CRC16_INIT;
         for (size_t n = 0; n < len; ++n) {
-            CRC ^= data[n];
-            for (int m = 0; m < 8; ++m) {
-                if (CRC & 1) CRC = (CRC >> 1) ^ config::CRC16_POLY;
-                else CRC >>= 1;
-            }
+            CRC = static_cast<uint16_t>((CRC >> 8) ^ detail::CRC16_TABLE[(CRC ^ data[n]) & 0xFF]);
         }
         return CRC;
     }
