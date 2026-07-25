@@ -33,9 +33,10 @@ namespace starDustNS::useDefaultTumenStarNet{
         sysAskJoinStarNet = 0x17,
         sysSayJoinStarNet = 0x18,
         sysAskLeaveStarNet = 0x19,
-        sysSayLeaveStarNet = 0x20,
-        sysBanDevice = 0x21,
+        sysSayLeaveStarNet = 0x1A,
+        sysBanDevice = 0x1B,
         sysError = 0xFF
     };
 }
+
 #endif
