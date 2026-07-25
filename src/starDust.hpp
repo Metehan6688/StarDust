@@ -68,6 +68,10 @@ class StarDust{
             return lastResult_;
         }
 
+        bool lastResultIsError() const{
+            return starDustNS::parser::isError(lastResult_);
+        }
+
         bool isPortOpen() const {
         #if defined(USE_LINUX_FRAMEWORK)
             return port_.isOpen();
