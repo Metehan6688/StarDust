@@ -1,4 +1,4 @@
-# StarDust Communication Protocol — v4.x
+# StarDust Communication Protocol — v4.4
 
 A packet-based, CRC16-validated, signature-checked, lightly encrypted, non-blocking communication protocol library for embedded systems (Arduino, Linux/POSIX serial port).
 
