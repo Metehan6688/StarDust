@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here.
 
+## [4.4] - 2026-07-27
+> Added broadcast & multicast support to the parser via receiver address filtering.
+- New config flags: `ENABLE_BROADCAST_IN_PARSER`, `ENABLE_MULTICAST_IN_PARSER` (independently toggleable in config.hpp).
+- `WILDCARD_BYTE` (0xFF) reserved for squadID/unitID when either flag is enabled:
+- squadID == WILDCARD_BYTE -> accepted by everyone regardless of unitID (true broadcast), only when ENABLE_BROADCAST_IN_PARSER is defined.
+- squadID matches mine + unitID == WILDCARD_BYTE -> accepted by every unit in my squad, only when ENABLE_MULTICAST_IN_PARSER is defined.
+- If a flag is disabled, its corresponding field requires an exact address match — WILDCARD_BYTE is not treated specially for that field.
+- New parseResult values: ANOTHER_SQUAD, ANOTHER_UNIT — packet passed CRC but wasn't addressed to us; sender/receiver are still populated in the export struct for diagnostics.
+- setMyAddress() now takes std::array<uint8_t, 2> and writes to config::myAddress (previously an instance member on StarDust).
 
 ## [4.3] - 2026-07-26
 - Fixing bugs and added crypto key can change in runtime now with setMyCryptoKey([16]) function
