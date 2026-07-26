@@ -39,6 +39,10 @@ class StarDust{
             myAddress_.unitID  = unitID;
         }
 
+        void setMyCryptoKey(std::array<uint8_t, 16> myKey){
+            starDustNS::config::CRYPTO_KEY = myKey;
+        }
+
         bool send(uint8_t targetSquad, uint8_t targetUnit, uint16_t functionCode, const uint8_t* payload){
             starDustNS::packet::address_t target{targetSquad, targetUnit};
             return starDustNS::sender::sendPacket(port_, myAddress_, target, functionCode, payload);

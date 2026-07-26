@@ -3,6 +3,9 @@
 All notable changes to this project are documented here.
 
 
+## [4.3] - 2026-07-26
+- Fixing bugs and added crypto key can change in runtime now with setMyCryptoKey([16]) function
+
 ## [4.2] - 2026-07-26
 - Fixing some bugs and changed crc16 calcualte logic. more flash area, less ram. good deal for this verison.
 
