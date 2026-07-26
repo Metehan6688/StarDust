@@ -22,6 +22,8 @@ namespace starDustNS::parser {
         READING,
         CRC_ERROR,
         SIGNATURE_ERROR,
+        ANOTHER_SQUAD,
+        ANOTHER_UNIT,
         INVALID_FRAME,
         TIMEOUT,
         UNDEFINED_ERROR
@@ -114,12 +116,41 @@ namespace starDustNS::parser {
 
                 uint16_t computedCRC = calculateCRC16(ctx.rxBuffer, sizeof(packet::packet_t) - sizeof(received.crc16));
 
+                // Address filtering:
+                //   squadID == WILDCARD_BYTE  -> true broadcast, accepted by everyone regardless of unitID
+                //   squadID == mine, unitID == WILDCARD_BYTE -> multicast to every unit in my squad
+                //   squadID == mine, unitID == mine -> normal point-to-point match
+                // Anything else is not addressed to us and is filtered out before signature/decrypt.
+                #ifdef ENABLE_BROADCAST_IN_PARSER
+                    bool isBroadcast = (received.header.receiver.squadID == starDustNS::config::WILDCARD_BYTE);
+                    bool squadMatches = isBroadcast
+                        || (received.header.receiver.squadID == starDustNS::config::myAddress[0]);
+                #else
+                    bool isBroadcast = false;
+                    bool squadMatches = (received.header.receiver.squadID == starDustNS::config::myAddress[0]);
+                #endif
+
+                #ifdef ENABLE_MULTICAST_IN_PARSER
+                    bool unitMatches = (received.header.receiver.unitID == starDustNS::config::myAddress[1])
+                        || (received.header.receiver.unitID == starDustNS::config::WILDCARD_BYTE);
+                #else
+                    bool unitMatches = (received.header.receiver.unitID == starDustNS::config::myAddress[1]);
+                #endif
+
                 parseResult result;
                 if (computedCRC != received.crc16) {
                     result = parseResult::CRC_ERROR;
-                } else if (!verifySignature(config::SIGNATURE, received.signature, config::SIGNATURE_LEN)) {
+                }
+                else if (!squadMatches) {
+                    result = parseResult::ANOTHER_SQUAD;
+                }
+                else if (!isBroadcast && !unitMatches) {
+                    result = parseResult::ANOTHER_UNIT;
+                }
+                else if (!verifySignature(config::SIGNATURE, received.signature, config::SIGNATURE_LEN)) {
                     result = parseResult::SIGNATURE_ERROR;
-                } else {
+                }
+                else {
                     starDustNS::security::crypto::decryptPayload(received.payload, config::PAYLOAD_LEN);
                     outByte.sender       = received.header.sender;
                     outByte.receiver     = received.header.receiver;
@@ -127,12 +158,15 @@ namespace starDustNS::parser {
                     memcpy(outByte.payload, received.payload, config::PAYLOAD_LEN);
                     result = parseResult::OK;
                 }
-
-                if (result == parseResult::CRC_ERROR || result == parseResult::SIGNATURE_ERROR) {
+                if (result == parseResult::CRC_ERROR
+                    || result == parseResult::SIGNATURE_ERROR
+                    || result == parseResult::ANOTHER_SQUAD
+                    || result == parseResult::ANOTHER_UNIT) {
                     outByte = exportPack_t{};
                     outByte.sender   = received.header.sender;
                     outByte.receiver = received.header.receiver;
-                } else if (result != parseResult::OK) {
+                }
+                else if (result != parseResult::OK) {
                     outByte = exportPack_t{};
                 }
                 outByte.resultLog = result;

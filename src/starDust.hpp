@@ -17,7 +17,6 @@
     // #error
 #endif
 
-
 class StarDust{
     public:
         using Packet = starDustNS::parser::exportPack_t;
@@ -34,18 +33,19 @@ class StarDust{
     #endif
 
 
-        void setMyAddress(uint8_t squadID, uint8_t unitID){
-            myAddress_.squadID = squadID;
-            myAddress_.unitID  = unitID;
+        void setMyAddress(std::array<uint8_t, 2> myAddress){
+            starDustNS::config::myAddress = myAddress;
         }
 
         void setMyCryptoKey(std::array<uint8_t, 16> myKey){
             starDustNS::config::CRYPTO_KEY = myKey;
         }
 
+
         bool send(uint8_t targetSquad, uint8_t targetUnit, uint16_t functionCode, const uint8_t* payload){
             starDustNS::packet::address_t target{targetSquad, targetUnit};
-            return starDustNS::sender::sendPacket(port_, myAddress_, target, functionCode, payload);
+            starDustNS::packet::address_t me{starDustNS::config::myAddress[0], starDustNS::config::myAddress[1]};
+            return starDustNS::sender::sendPacket(port_, me, target, functionCode, payload);
         }
 
     #ifdef USE_DEFAULT_TUMEN_STARNET
@@ -85,7 +85,6 @@ class StarDust{
         }
     
     private:
-        starDustNS::packet::address_t   myAddress_{};
         starDustNS::parser::parserCTX_t ctx_{};
         Packet lastPacket_{};
         Result lastResult_ = Result::WAIT;
