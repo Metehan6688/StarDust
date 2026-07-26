@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <config.hpp>
+#include "config.hpp"
 
 
 #ifdef USE_DEFAULT_TUMEN_STARNET
