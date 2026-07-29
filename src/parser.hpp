@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
+#include <cstdint>
+#include <cstddef>
 #include <string.h>
 #include "packet.hpp"
 #include "config.hpp"
@@ -9,14 +9,14 @@
 
 
 namespace starDustNS::parser {
-    enum class parserState : uint8_t {
+    enum class parserState : std::uint8_t {
         IDLE,
         READING_HEADER,
         READING_BODY,
         READING_CRC
     };
 
-    enum class parseResult {
+    enum class parseResult : std::uint8_t{
         OK,
         WAIT,
         READING,
@@ -39,16 +39,16 @@ namespace starDustNS::parser {
 
     struct parserCTX_t {
         parserState state = parserState::IDLE;
-        uint8_t bytesRead = 0;
-        uint32_t lastReadTS = 0;
-        uint8_t rxBuffer[sizeof(packet::packet_t)] = {};
+        std::uint8_t bytesRead = 0;
+        std::uint32_t lastReadTS = 0;
+        std::uint8_t rxBuffer[sizeof(packet::packet_t)] = {};
     };
 
     struct exportPack_t {
         packet::address_t sender{};
         packet::address_t receiver{};
-        uint16_t functionCode = 0;
-        uint8_t payload[config::PAYLOAD_LEN] = {};
+        std::uint16_t functionCode = 0;
+        std::uint8_t payload[config::PAYLOAD_LEN] = {};
         parseResult resultLog = parseResult::WAIT;
     };
 
@@ -60,7 +60,7 @@ namespace starDustNS::parser {
         }
     }
 
-    inline parseResult parsePacket(uint8_t inComingByte, uint32_t millis, exportPack_t& outByte, parserCTX_t& ctx) {
+    inline parseResult parsePacket(std::uint8_t inComingByte, std::uint32_t millis, exportPack_t& outByte, parserCTX_t& ctx) {
         using starDustNS::security::calculateCRC16;
         using starDustNS::security::verifySignature;
 

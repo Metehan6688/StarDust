@@ -7,10 +7,10 @@
 
 namespace starDustNS::security{
     namespace detail {
-        inline constexpr std::array<uint16_t, 256> makeCRC16Table() {
-            std::array<uint16_t, 256> table{};
-            for (uint32_t i = 0; i < 256; ++i) {
-                uint16_t crc = static_cast<uint16_t>(i);
+        inline constexpr std::array<std::uint16_t, 256> makeCRC16Table() {
+            std::array<std::uint16_t, 256> table{};
+            for (std::uint32_t i = 0; i < 256; ++i) {
+                std::uint16_t crc = static_cast<std::uint16_t>(i);
                 for (int bit = 0; bit < 8; ++bit) {
                     crc = (crc & 1) ? (crc >> 1) ^ config::CRC16_POLY : (crc >> 1);
                 }
@@ -22,32 +22,32 @@ namespace starDustNS::security{
         inline constexpr auto CRC16_TABLE = makeCRC16Table();
     }
 
-    inline uint16_t calculateCRC16(const uint8_t* data, size_t len){
-        uint16_t CRC = config::CRC16_INIT;
+    inline std::uint16_t calculateCRC16(const uint8_t* data, size_t len){
+        std::uint16_t CRC = config::CRC16_INIT;
         for (size_t n = 0; n < len; ++n) {
-            CRC = static_cast<uint16_t>((CRC >> 8) ^ detail::CRC16_TABLE[(CRC ^ data[n]) & 0xFF]);
+            CRC = static_cast<std::uint16_t>((CRC >> 8) ^ detail::CRC16_TABLE[(CRC ^ data[n]) & 0xFF]);
         }
         return CRC;
     }
 
-    inline bool verifySignature(const uint8_t* expected, const uint8_t* received, size_t len){
-        uint8_t difference = 0;
-        for (size_t n = 0; n < len; ++n) {
-            difference |= static_cast<uint8_t>(expected[n] ^ received[n]);
+    inline bool verifySignature(const std::uint8_t* expected, const std::uint8_t* received, size_t len){
+        std::uint8_t difference = 0;
+        for (std::size_t n = 0; n < len; ++n) {
+            difference |= static_cast<std::uint8_t>(expected[n] ^ received[n]);
         }
         return difference == 0;
     }
 
     namespace crypto{
-        inline void encryptPayload(uint8_t* payload, size_t size) {
+        inline void encryptPayload(std::uint8_t* payload, std::size_t size) {
             for (size_t i = 0; i < size; ++i) {
                 payload[i] ^= config::CRYPTO_KEY[i % 16];
                 payload[i] = ((payload[i] << 3) | (payload[i] >> 5)) & 0xFF;
             }
         }   
 
-        inline void decryptPayload(uint8_t* payload, size_t size) {
-            for (size_t i = 0; i < size; ++i) {
+        inline void decryptPayload(std::uint8_t* payload, std::size_t size) {
+            for (std::size_t i = 0; i < size; ++i) {
                 payload[i] = ((payload[i] >> 3) | (payload[i] << 5)) & 0xFF;
                 payload[i] ^= config::CRYPTO_KEY[i % 16];
             }   

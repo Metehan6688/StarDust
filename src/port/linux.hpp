@@ -5,7 +5,7 @@
 #ifdef USE_LINUX_FRAMEWORK
 
 #include "port.hpp"
-#include <stdint.h>
+#include <cstdint>
 #include <stddef.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -15,7 +15,7 @@
 namespace starDustNS::port{
 
     namespace detail {
-        inline speed_t toTermiosBaud(uint32_t baud) {
+        inline speed_t toTermiosBaud(std::uint32_t baud) {
             switch (baud) {
                 case 9600:   return B9600;
                 case 19200:  return B19200;
@@ -30,7 +30,7 @@ namespace starDustNS::port{
 
     class linuxSerialPort : public internalPort {
         public:
-            explicit linuxSerialPort(const char* devicePath, uint32_t baudRate = 115200) {
+            explicit linuxSerialPort(const char* devicePath, std::uint32_t baudRate = 115200) {
                 fd_ = ::open(devicePath, O_RDWR | O_NOCTTY | O_NONBLOCK);
                 if (fd_ < 0) {
                     return;

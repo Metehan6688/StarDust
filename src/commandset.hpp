@@ -1,12 +1,12 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include "config.hpp"
 
 
 #ifdef USE_DEFAULT_TUMEN_STARNET
 namespace starDustNS::useDefaultTumenStarNet{
-    enum class starNetCodes : uint8_t {
+    enum class starNetCodes : std::uint8_t {
         sysDefCode = 0x0,
         sysPingCode = 0x1,
         sysPongCode = 0x2,

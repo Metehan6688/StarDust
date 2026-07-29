@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "config.hpp"
 #include "commandset.hpp"
 #include "packet.hpp"
@@ -33,29 +34,29 @@ class StarDust{
     #endif
 
 
-        void setMyAddress(std::array<uint8_t, 2> myAddress){
+        void setMyAddress(std::array<std::uint8_t, 2> myAddress){
             starDustNS::config::myAddress = myAddress;
         }
 
-        void setMyCryptoKey(std::array<uint8_t, 16> myKey){
+        void setMyCryptoKey(std::array<std::uint8_t, 16> myKey){
             starDustNS::config::CRYPTO_KEY = myKey;
         }
 
 
-        bool send(uint8_t targetSquad, uint8_t targetUnit, uint16_t functionCode, const uint8_t* payload){
+        bool send(std::uint8_t targetSquad, std::uint8_t targetUnit, std::uint16_t functionCode, const std::uint8_t* payload){
             starDustNS::packet::address_t target{targetSquad, targetUnit};
             starDustNS::packet::address_t me{starDustNS::config::myAddress[0], starDustNS::config::myAddress[1]};
             return starDustNS::sender::sendPacket(port_, me, target, functionCode, payload);
         }
 
     #ifdef USE_DEFAULT_TUMEN_STARNET
-        bool send(uint8_t targetSquad, uint8_t targetUnit, Command cmd, const uint8_t* payload){
+        bool send(std::uint8_t targetSquad, std::uint8_t targetUnit, Command cmd, const std::uint8_t* payload){
             return send(targetSquad, targetUnit, static_cast<uint16_t>(cmd), payload);
         }
     #endif
 
         bool update(uint32_t millis) {
-            uint8_t b;
+            std::uint8_t b;
             while (port_.readByte(b)){
                 lastResult_ = starDustNS::parser::parsePacket(b, millis, lastPacket_, ctx_);
                 if (lastResult_ == Result::OK) {

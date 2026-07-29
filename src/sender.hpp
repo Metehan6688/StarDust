@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <string.h>
 #include "packet.hpp"
 #include "config.hpp"
@@ -12,7 +12,7 @@ namespace starDustNS::sender{
     namespace detail {
         inline void preparePacket(packet::packet_t& pack,
                             packet::address_t myID, packet::address_t targetID,
-                            packet::funcCode_t order, const uint8_t* payloadData){
+                            packet::funcCode_t order, const std::uint8_t* payloadData){
             using starDustNS::security::calculateCRC16;
             using starDustNS::security::crypto::encryptPayload;
 
@@ -29,7 +29,7 @@ namespace starDustNS::sender{
             memcpy(pack.signature, config::SIGNATURE, config::SIGNATURE_LEN);
 
             pack.crc16 = calculateCRC16(
-                reinterpret_cast<const uint8_t*>(&pack),
+                reinterpret_cast<const std::uint8_t*>(&pack),
                 sizeof(packet::packet_t) - sizeof(pack.crc16));
         }
     }
@@ -40,7 +40,7 @@ namespace starDustNS::sender{
         packet::packet_t pack{};
         detail::preparePacket(pack, myID, targetID, order, payloadData);
 
-        size_t written = outPort.writeByte(reinterpret_cast<const uint8_t*>(&pack), sizeof(pack));
+        std::size_t written = outPort.writeByte(reinterpret_cast<const std::uint8_t*>(&pack), sizeof(pack));
         return written == sizeof(pack);
     }
 }
