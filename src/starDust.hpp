@@ -38,9 +38,11 @@ class StarDust{
             starDustNS::config::myAddress = myAddress;
         }
 
+        #if defined(ENABLE_CRYPTO_IN_PAYLOAD)
         void setMyCryptoKey(std::array<std::uint8_t, 16> myKey){
             starDustNS::config::CRYPTO_KEY = myKey;
         }
+        #endif
 
 
         bool send(std::uint8_t targetSquad, std::uint8_t targetUnit, std::uint16_t functionCode, const std::uint8_t* payload){

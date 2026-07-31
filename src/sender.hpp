@@ -14,7 +14,10 @@ namespace starDustNS::sender{
                             packet::address_t myID, packet::address_t targetID,
                             packet::funcCode_t order, const std::uint8_t* payloadData){
             using starDustNS::security::calculateCRC16;
+
+            #if defined(ENABLE_CRYPTO_IN_PAYLOAD)
             using starDustNS::security::crypto::encryptPayload;
+            #endif
 
             pack.header.firstByte    = config::FIRST_BYTE;
             pack.header.secondByte   = config::SECOND_BYTE;
@@ -24,7 +27,10 @@ namespace starDustNS::sender{
 
             memset(pack.payload, 0, config::PAYLOAD_LEN);
             memcpy(pack.payload, payloadData, config::PAYLOAD_LEN);
+
+            #if defined(ENABLE_CRYPTO_IN_PAYLOAD)
             encryptPayload(pack.payload, config::PAYLOAD_LEN);
+            #endif
 
             memcpy(pack.signature, config::SIGNATURE, config::SIGNATURE_LEN);
 

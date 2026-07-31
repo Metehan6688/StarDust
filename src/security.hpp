@@ -38,6 +38,7 @@ namespace starDustNS::security{
         return difference == 0;
     }
 
+    #if defined(ENABLE_CRYPTO_IN_PAYLOAD)
     namespace crypto{
         inline void encryptPayload(std::uint8_t* payload, std::size_t size) {
             for (size_t i = 0; i < size; ++i) {
@@ -53,4 +54,5 @@ namespace starDustNS::security{
             }   
         }
     }
+    #endif
 }

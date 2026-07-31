@@ -151,7 +151,10 @@ namespace starDustNS::parser {
                     result = parseResult::SIGNATURE_ERROR;
                 }
                 else {
+                    #if defined(ENABLE_CRYPTO_IN_PAYLOAD)
                     starDustNS::security::crypto::decryptPayload(received.payload, config::PAYLOAD_LEN);
+                    #endif
+                    
                     outByte.sender       = received.header.sender;
                     outByte.receiver     = received.header.receiver;
                     outByte.functionCode = received.header.functionCode;
